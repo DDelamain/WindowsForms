@@ -40,13 +40,24 @@ namespace Clock
 
 		}
 
+		void SetVisibility(bool visible)
+		{
+			checkBoxShowDate.Visible = visible;
+			checkBoxShowWeekday.Visible = visible;
+			buttonHideControls.Visible = visible;
+			this.FormBorderStyle = visible ? FormBorderStyle.FixedToolWindow : FormBorderStyle.None;//полностью убираем границы окна
+			this.ShowInTaskbar = visible;//скрываем кнопку приложения в панели задач
+			this.TransparencyKey = visible ? Color.Empty : this.BackColor;// делаем окно прозрачным
+			//Для того чтобы сделать окно прозрачным, его TransparencyKey должен совпадать с BackColor
+		}
 		private void buttonHideControls_Click(object sender, EventArgs e)
 		{
-			this.FormBorderStyle = FormBorderStyle.None;
-			checkBoxShowDate.Visible = false;
-			checkBoxShowWeekday.Visible = false;
-			buttonHideControls.Visible = false;
-			this.ShowInTaskbar = false;
+			SetVisibility(false);
+		}
+
+		private void labelTime_DoubleClick(object sender, EventArgs e)
+		{
+			SetVisibility(true);
 		}
 	}
 }
