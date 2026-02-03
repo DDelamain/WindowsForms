@@ -12,6 +12,8 @@ namespace Clock
 {
 	public partial class MainForm : Form
 	{
+		ColorDialog backgroundDialog;
+		ColorDialog foregroundDialog;
 		public MainForm()
 		{
 			InitializeComponent();
@@ -20,6 +22,10 @@ namespace Clock
 					Screen.PrimaryScreen.Bounds.Width - this.Width - 50,
 					50
 				);
+			tsmiShowControls.Checked = true;
+			backgroundDialog = new ColorDialog();
+			foregroundDialog = new ColorDialog();
+
 		}
 
 		private void timer_Tick(object sender, EventArgs e)
@@ -36,11 +42,6 @@ namespace Clock
 			notifyIcon.Text = labelTime.Text ;
 		}
 
-		private void checkBox1_CheckedChanged(object sender, EventArgs e)
-		{
-
-		}
-
 		void SetVisibility(bool visible)
 		{
 			checkBoxShowDate.Visible = visible;
@@ -51,14 +52,45 @@ namespace Clock
 			this.TransparencyKey = visible ? Color.Empty : this.BackColor;// делаем окно прозрачным
 			//Для того чтобы сделать окно прозрачным, его TransparencyKey должен совпадать с BackColor
 		}
-		private void buttonHideControls_Click(object sender, EventArgs e)
+		private void buttonHideControls_Click(object sender, EventArgs e) => tsmiShowControls.Checked = false;
+		private void labelTime_DoubleClick(object sender, EventArgs e) => tsmiShowControls.Checked = true;
+		private void tsmiTopmost_CheckedChanged(object sender, EventArgs e) =>
+			//this.TopMost = tsmiTopmost.Checked;
+			this.TopMost = (sender as ToolStripMenuItem).Checked;
+
+		private void tsmiShowControls_CheckedChanged(object sender, EventArgs e) => SetVisibility(tsmiShowControls.Checked);
+		private void tsmiExit_Click(object sender, EventArgs e) => this.Close();
+
+		private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
-			SetVisibility(false);
+			if (!this.TopMost)
+			{
+				this.TopMost = true;
+				this.TopMost = false;
+			}
 		}
 
-		private void labelTime_DoubleClick(object sender, EventArgs e)
+		private void checkBoxShowDate_CheckedChanged(object sender, EventArgs e) =>
+			tsmiShowDate.Checked = (sender as CheckBox).Checked;
+		private void checkBoxShowWeekday_CheckedChanged(object sender, EventArgs e) =>
+			tsmiShowWeekday.Checked = ( sender as CheckBox).Checked;
+		private void tsmiShowDate_CheckedChanged(object sender, EventArgs e) =>
+			checkBoxShowDate.Checked = (sender as ToolStripMenuItem).Checked;
+		private void tsmiShowWeekday_CheckedChanged(object sender, EventArgs e) =>
+			checkBoxShowWeekday.Checked = (sender as ToolStripMenuItem).Checked;
+
+		private void tsmiBackgroundColor_Click(object sender, EventArgs e)
 		{
-			SetVisibility(true);
+			DialogResult result = backgroundDialog.ShowDialog();
+			if (result == DialogResult.OK)
+			{
+				labelTime.BackColor = backgroundDialog.Color;
+			}
+		}
+		private void tsmiForegroundColor_Click(object sender, EventArgs e)
+		{
+			if (foregroundDialog.ShowDialog() == DialogResult.OK)
+				labelTime.ForeColor = foregroundDialog.Color;
 		}
 	}
 }
