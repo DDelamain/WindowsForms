@@ -76,7 +76,8 @@ namespace Clock
 				this.parent.Location.X - this.Width/2, 
 				this.parent.Location.Y + 100
 				);
-			LoadFonts();
+			//LoadFonts();
+			//ApplyFontExample(FontFile);
 		}
 
 		private void buttonOK_Click(object sender, EventArgs e)
@@ -84,22 +85,22 @@ namespace Clock
 			this.Font = labelExample.Font;
 			this.FontFile = fonts[comboBoxFonts.SelectedItem.ToString()];
 		}
-		void ApplyFontExample()
+		public Font ApplyFontExample(string filename)
 		{
 			if (pfc != null) pfc.Dispose();
 			pfc = new PrivateFontCollection();
-			pfc.AddFontFile(fonts[comboBoxFonts.SelectedItem.ToString()]);
-			labelExample.Font = new Font(pfc.Families[0], (float)numericUpDownFontSize.Value);	
+			pfc.AddFontFile(filename);
+			return labelExample.Font = new Font(pfc.Families[0], (float)numericUpDownFontSize.Value);	
 
 		}
 		private void comboBoxFonts_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			ApplyFontExample();
+			ApplyFontExample(fonts[comboBoxFonts.SelectedItem.ToString()]);
 		}
 
 		private void numericUpDownFontSize_ValueChanged(object sender, EventArgs e)
 		{
-			ApplyFontExample();
+			ApplyFontExample(fonts[comboBoxFonts.SelectedItem.ToString()]);
 		}
 	}
 }
